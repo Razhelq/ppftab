@@ -1,0 +1,162 @@
+# Zadanie 3.1
+omen_one = "Jak mawial swity Lukasz reka chu nie oszukasz"
+omen_two = "Damn nigga"
+omen_three = "shit for shit"
+omen_four = "bitc be comin i be tapin that shit"
+omen_five = "hell yeah"
+
+from random import randint
+
+guess = randint(1,5)
+
+print guess
+if guess == 1:
+    print "Your prophecy is: %s" % omen_one
+elif guess == 2:
+    print "Your prophecy is: %s" % omen_two
+elif guess == 3:
+    print "Your prophecy is: %s" % omen_three
+elif guess == 4:
+    print "Your prophecy is: %s" % omen_four
+elif guess == 5:
+    print "Your prophecy is: %s" % omen_five
+
+# Zadanie 3.2 -----------------------------------------------------------------------------------------------
+orzel = 0
+reszka = 0
+guess = 0
+
+
+while guess <= 100:
+    check = randint(1,2)
+    if check == 1:
+        guess += 1
+        orzel += 1
+    elif check == 2:
+        guess += 1
+        reszka += 1
+print "Orzel: %s a reszka: %s" % (orzel, reszka)
+
+# Zadanie 3.3 --------------------------------------------------------------------------------------------------------
+# Jaka to liczba?
+
+
+import random
+
+print "\t\nWitaj w grze 'Jaka to liczba'!"
+
+the_number = random.randint(1, 100)
+guess = int(raw_input("Ta liczba to: "))
+tries = 1
+checks = 1
+
+while guess != the_number:
+    checks += 1
+    if checks < 0:
+        if guess > the_number:
+            print "Za duza..."
+        else:
+            print "Za mala..."
+    else:
+        print "You had your chance"
+        print "Ta liczba to: %s" % the_number
+        break
+    guess = int(raw_input("Ta liczba to: "))
+    tries += 1
+
+if guess == the_number:
+    print "Wygrales, Ta liczba to: %s" % the_number
+
+
+
+raw_input("\n\nAby zakonczyc program, nacisnij klawisz Enter.")
+
+# Zadanie 3.4 ----------------------------------------------------------------------------------------------------
+
+"""
+Wpisz liczbe od 1 do 100
+Wylosuj los od 1 do 100
+Dopoki liczba nie jest rowna losowi
+    Jesli los jest mniejszy od liczby
+        Wylosuj kolejny los z przedzialu los i 100
+        jesli los jest za maly
+            wylosuj kolejny los z przedzialu los i 100
+        jesli jest za duzy
+            gorna granica rowna sie los
+    Jesli los jest wiekszy od liczby
+        wylosuj kolejny los z przedzialu 100 i los
+        jesli los jest za duzy
+            wylosuj kolejny los z przedzialu 100 i los
+        jesli jes za maly
+            dolna granica rowna sie los
+Wyswietl liczbe i ilosc prob        
+"""
+
+liczba = int(raw_input("Wprowadz liczbe:"))
+
+tries = 1
+
+guess_dolny = 1
+guess_gorny = 100
+
+from time import sleep
+
+while guess != liczba:
+    while guess < liczba:
+        guess_dolny = guess
+        guess = randint((guess + 1), (guess_gorny - 1))
+
+        tries += 1
+        sleep(0)
+    guess_gorny = guess
+    while guess > liczba:
+        guess_gorny = guess
+        guess = randint((guess_dolny + 1), (guess - 1))
+
+        tries += 1
+        sleep(0)
+    guess_dolny = guess
+print "Ta liczba to %s" % liczba
+print "Computer needed %s tries" % tries
+
+trieso = 0
+guess = randint(1,100)
+while guess != liczba:
+    if guess < liczba:
+        guess = randint(guess, guess_gorny)
+
+        trieso += 1
+        sleep(0)
+        while guess < liczba:
+            guess = randint(guess, guess_gorny)
+
+            trieso += 1
+            sleep(0)
+        guess_gorny = guess
+    elif guess > liczba:
+        guess = randint(guess_dolny, guess)
+
+        trieso += 1
+        sleep(1)
+        while guess > liczba:
+            guess = randint(guess_dolny, guess)
+
+            trieso += 1
+            sleep(0)
+        guess_dolny = guess
+    else:
+        print "Ta liczba to %s" % liczba
+    trieso += 1
+print "Ta liczba to %s" % liczba
+print "Computer needed %s tries" % trieso
+
+
+triess = 1
+guess = randint(1, 100)
+while guess != liczba:
+    guess = randint(1, 100)
+    triess += 1
+print "Ta liczba to %s" % guess
+print "Computer needed %s triess" % triess
+
+
