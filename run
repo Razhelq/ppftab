@@ -1,9 +1,9 @@
 # Zadanie 3.1
-omen_one = "Jak mawial swity Lukasz reka chu nie oszukasz"
-omen_two = "Damn nigga"
-omen_three = "shit for shit"
-omen_four = "bitc be comin i be tapin that shit"
-omen_five = "hell yeah"
+omen_one = "Jak"
+omen_two = "Damn"
+omen_three = "shit"
+omen_four = "bitc"
+omen_five = "hell"
 
 from random import randint
 
