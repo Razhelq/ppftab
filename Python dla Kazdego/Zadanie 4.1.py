@@ -9,4 +9,4 @@ print("Your numbers are:")
 for i in range(beginning, end, step):
     print(i)
 
-print("Thanks")
+print("Thanks!")
