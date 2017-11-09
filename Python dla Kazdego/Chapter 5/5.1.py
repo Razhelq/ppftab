@@ -38,5 +38,8 @@ while written != count_words:
 
 
 
+<<<<<<< HEAD
 
+>>>>>>> 5.1
+=======
 >>>>>>> 5.1
