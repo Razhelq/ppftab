@@ -150,7 +150,7 @@ def best_moves(board):
         else:
             for move in BEST_MOVES:
                 if move in legal_moves(board):
-                    best_move_comp = move
+                    best_move_comp = int(move)
                     print(best_move_comp)
                     return best_move_comp
 
