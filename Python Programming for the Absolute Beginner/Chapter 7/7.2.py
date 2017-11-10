@@ -1,9 +1,10 @@
 # The material from the book in polish
+# NOT DONE NOT WORKING
 
 # Turniej wiedzy
 # Gra sprawdzająca wiedzę ogólną, odczytująca dane ze zwykłego pliku tekstowego
 
-import sys
+import sys, pickle
 
 def open_file(file_name, mode):
     """Otwórz plik."""
@@ -41,17 +42,59 @@ def next_block(the_file):
     point = next_line(the_file)
 
     return category, question, answers, correct, explanation, point
-
+# Not finished
 def welcome(title):
     """Przywitaj gracza i pobierz jego nazwę."""
     print("\t\t Witaj w turnieju wiedzy!\n")
     print("\t\t", title, "\n")
+
+def highlights(new_score):
+    total_score = open("total_score.dat", "rb+")
+    
+
+    scores = pickle.load(total_score)
+    print("Old best scores:")
+    for i in range(5):
+        score = total_score.readline(i)
+        scores.append(score)
+        print("Score ", (i + 1), "is", score)
+          
+    print(scores)
+
+    for i in range(5):
+        if new_score > scores[i]:
+            scores[i + 2] = scores[i + 1]
+            scores[i + 3] = scores[i + 2]
+            scores[i + 4] = scores[i + 3]
+            scores[i] = new_score
+
+    print("New best scores:")
+
+    for i in range(5):
+        score = total_score.readline(i)
+        scores.append(score)
+        print("Score ", (i + 1), "is", score)
+
+    print(scores)
+    
+
+    pickle.dump(scores, total_score, True)
+                     
+    total_score.close
+
+def fake():
+    fake_scores = open("total_score.dat", "ab")
+    scores = ["0", "0", "0", "0", "0"]
+    pickle.dump(scores, fake_scores, True)
+    fake_scores.close()
  
 def main():
     trivia_file = open_file("kwiz.txt", "r")
     title = next_line(trivia_file)
     welcome(title)
     score = 0
+
+    fake()
 
     # pobierz pierwszy blok
     category, question, answers, correct, explanation, point = next_block(trivia_file)
@@ -82,6 +125,8 @@ def main():
 
     print("To było ostatnie pytanie!")
     print("Twój końcowy wynik wynosi", score)
+
+    highlights(str(score))
  
 main()  
 input("\n\nAby zakończyć program, naciśnij klawisz Enter.")
