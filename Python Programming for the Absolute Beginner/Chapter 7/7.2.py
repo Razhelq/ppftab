@@ -4,7 +4,7 @@
 # Turniej wiedzy
 # Gra sprawdzająca wiedzę ogólną, odczytująca dane ze zwykłego pliku tekstowego
 
-import sys, pickle
+import sys, shelve
 
 def open_file(file_name, mode):
     """Otwórz plik."""
@@ -48,45 +48,57 @@ def welcome(title):
     print("\t\t Witaj w turnieju wiedzy!\n")
     print("\t\t", title, "\n")
 
-def highlights(new_score):
-    total_score = open("total_score.dat", "rb+")
+def fake():
+    fake_scores = shelve.open("total_score.dat")
+    for i in range(5):
+        fake_scores[str(i)] = {"Grasz", "0"}        
+        name, score = fake_scores[str(i)]
+        print((i + 1), name, " got ", score, " points.")
+    fake_scores.sync()
+    fake_scores.close()
     
+def highlights(new_score):
+    try:
+        total_score = shelve.open("total_score.dat", "w")
+    except:
+        fake()
+        total_score = shelve.open("total_score.dat", "c")
 
-    scores = pickle.load(total_score)
+    name = str(input("What is your name? "))
+    new_score = {name : new_score}
+    tries = 0
+    
+    total_scores = total_score
+    total_scores = sorted(total_scores.values())
+    
     print("Old best scores:")
     for i in range(5):
-        score = total_score.readline(i)
-        scores.append(score)
-        print("Score ", (i + 1), "is", score)
+        name, score = total_scores[i]
+        print((i + 1), name, " got ", score, " points.")          
           
-    print(scores)
-
     for i in range(5):
-        if new_score > scores[i]:
-            scores[i + 2] = scores[i + 1]
-            scores[i + 3] = scores[i + 2]
-            scores[i + 4] = scores[i + 3]
-            scores[i] = new_score
+        name, score = total_scores[i]                
+        if new_score[name] > score and tries == 0 and new_score[name] != 0:
+            total_scores[i + 4] = total_scores[i + 3]
+            total_scores[i + 3] = total_scores[i + 2]
+            total_scores[i + 2] = total_scores[i + 1]
+            total_scores[i + 1] = total_scores[i]
+            total_scores[i] = new_score
+            tries += 1
+
+            
+    print("!", total_score)
+    total_scores = sorted(total_scores.values())
+    print("!!!", total_scores)
 
     print("New best scores:")
 
     for i in range(5):
-        score = total_score.readline(i)
-        scores.append(score)
-        print("Score ", (i + 1), "is", score)
+        name, score = total_scores[i]
+        print((i + 1), name, " got ", score, " points.")
 
-    print(scores)
-    
-
-    pickle.dump(scores, total_score, True)
-                     
-    total_score.close
-
-def fake():
-    fake_scores = open("total_score.dat", "ab")
-    scores = ["0", "0", "0", "0", "0"]
-    pickle.dump(scores, fake_scores, True)
-    fake_scores.close()
+    total_score.sync()
+    total_score.close()
  
 def main():
     trivia_file = open_file("kwiz.txt", "r")
@@ -94,7 +106,7 @@ def main():
     welcome(title)
     score = 0
 
-    fake()
+    #fake()
 
     # pobierz pierwszy blok
     category, question, answers, correct, explanation, point = next_block(trivia_file)
@@ -125,7 +137,7 @@ def main():
 
     print("To było ostatnie pytanie!")
     print("Twój końcowy wynik wynosi", score)
-
+    
     highlights(str(score))
  
 main()  
