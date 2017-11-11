@@ -3,7 +3,7 @@
 # Turniej wiedzy
 # Gra sprawdzająca wiedzę ogólną, odczytująca dane ze zwykłego pliku tekstowego
 
-import sys
+import sys, pickle
 
 def open_file(file_name, mode):
     """Otwórz plik."""
@@ -27,10 +27,12 @@ def name():
     return user_name
 
 def fake():
-    fake = ("scores.dat", "wb")    
-    for i in range(5):
-        fake[i] = ["Gość", "0"]
-    return fake
+    fake = open("scores.dat", "wb")
+    fake_scores = []
+    for i in range(10):
+        fake_scores.append(("Gość", 0))
+    print(fake_scores)
+    pickle.dump(fake_scores, fake)
     fake.close()
 
 def highlights(score, user_name):
@@ -38,27 +40,32 @@ def highlights(score, user_name):
         scores = open("scores.dat", "rb+")
     except:
         fake()
-        
-    scores = open("scores.dat", "rb+")
-    highlights = []
-
-    for i in range(5):
-        highlights += scores[i]
- 
-    sorted(highlight.keys())
+        scores = open("scores.dat", "rb+")        
     
+    fake_scores = pickle.load(scores)
+    highlights = []
     for i in range(5):
-        if score > highlights[i[1]]:
+        name, internal_score = fake_scores[i]
+        highlights.append((name, internal_score))
+ 
+    sorted(highlights, key = lambda x: x[1])
+
+    for i in range(10):  
+        name, internal_score = highlights[i]
+        if int(score) > internal_score:
             highlights[i + 4] = highlights[i + 3]
             highlights[i + 3] = highlights[i + 2]
             highlights[i + 2] = highlights[i + 1]
             highlights[i + 1] = highlights[i]
-            highlights[i] = [score, user_name]
+            highlights[i] = [user_name, score]
+
+    fake_scores = highlights
 
     for i in range(5):
-        print(str(i), "score:")
+        print(str(i + 1), "score:")
         print(highlights[i])
 
+    pickle.dump(fake_scores, scores)
     scores.close()     
      
 def next_block(the_file):
@@ -117,15 +124,13 @@ def main():
         # pobierz kolejny blok
         category, question, answers, correct, explanation, point = next_block(trivia_file)
 
-    
-    
-    user_name = name()
-    highlights(score, user_name)    
-
     trivia_file.close()
 
     print("To było ostatnie pytanie!")
     print("Twój końcowy wynik wynosi", score)
+
+    user_name = name()
+    highlights(score, user_name)  
  
 main()  
 input("\n\nAby zakończyć program, naciśnij klawisz Enter.")
