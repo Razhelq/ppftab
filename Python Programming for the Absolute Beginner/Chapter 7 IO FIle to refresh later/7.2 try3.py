@@ -1,4 +1,5 @@
 # The material from the book in polish
+# NOT WORKING
 
 # Turniej wiedzy
 # Gra sprawdzająca wiedzę ogólną, odczytująca dane ze zwykłego pliku tekstowego
@@ -27,44 +28,55 @@ def name():
     return user_name
 
 def fake():
-    fake = open("scores.dat", "wb")
+    scores = open("scores.dat", "wb")
     fake_scores = []
-    for i in range(10):
-        fake_scores.append(("Gość", 0))
+    entry = (0, "Gość")
+    for i in range(5):
+        fake_scores.append(entry)
     print(fake_scores)
-    pickle.dump(fake_scores, fake)
-    fake.close()
+    pickle.dump(fake_scores, scores)
+    scores.close()
 
 def highlights(score, user_name):
     try:
-        scores = open("scores.dat", "rb+")
+        scores = open("scores.dat", "rb")
     except:
         fake()
-        scores = open("scores.dat", "rb+")        
+        scores = open("scores.dat", "rb")        
     
     fake_scores = pickle.load(scores)
+    scores.close()
+    scores = open("scores.dat", "wb")     
     highlights = []
-    for i in range(5):
-        name, internal_score = fake_scores[i]
-        highlights.append((name, internal_score))
+    try:
+        for i in range(20):
+            internal_score, name = fake_scores[i]
+            entry_one = (internal_score, name)
+            highlights.append(entry_one)
+    except IndexError:
+        print("Error")
  
-    sorted(highlights, key = lambda x: x[1])
+    entry = (score, user_name)   
+    highlights.append(entry)
+    highlights.sort(reverse = True)
+    highlights = highlights[:20]
+    
+    try:
+        for i in range(20):
+            print(str(i + 1), "score:")
+            print(highlights[i])
+    except IndexError:
+        print("Error")
+        
+    try:
+        for i in range(20):
+            internal_score, name = highlights[i]
+            entry_two = (internal_score, name)
+            fake_scores.append(entry_two)
+    except IndexError:
+        print("Error")
 
-    for i in range(10):  
-        name, internal_score = highlights[i]
-        if int(score) > internal_score:
-            highlights[i + 4] = highlights[i + 3]
-            highlights[i + 3] = highlights[i + 2]
-            highlights[i + 2] = highlights[i + 1]
-            highlights[i + 1] = highlights[i]
-            highlights[i] = [user_name, score]
-
-    fake_scores = highlights
-
-    for i in range(5):
-        print(str(i + 1), "score:")
-        print(highlights[i])
-
+    fake_scores.sort(reverse = True)
     pickle.dump(fake_scores, scores)
     scores.close()     
      
