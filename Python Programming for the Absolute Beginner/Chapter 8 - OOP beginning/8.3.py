@@ -10,6 +10,12 @@ class Critter(object):
         self.hunger = hunger
         self.boredom = boredom
 
+    def __str__(self):
+        rep = "The valuse of your pet:\n"
+        rep += "The hunger = " + str(self.hunger)
+        rep += "\nThe boredom = " + str(self.boredom)
+        return rep
+
     def __pass_time(self):
         self.hunger += 1
         self.boredom += 1
@@ -78,6 +84,7 @@ def main():
         1 - słuchaj swojego zwierzaka
         2 - nakarm swojego zwierzaka
         3 - pobaw się ze swoim zwierzakiem
+        4 - show the values of your pet
         """)
     
         choice = input("Wybierasz: ")
@@ -98,6 +105,9 @@ def main():
         # pobaw się ze swoim zwierzakiem
         elif choice == "3":
             crit.play()
+
+        elif choice == "4":
+            print(crit)
 
         # nieznany wybór 
         else:
