@@ -140,6 +140,7 @@ def main():
             print(pet_four)
             print(pet_five)
         else:
+            print("Thanks!")
             sys.exit()
 
 main()
