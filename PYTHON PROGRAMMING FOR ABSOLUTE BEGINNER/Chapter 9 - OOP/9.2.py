@@ -2,7 +2,6 @@
 
 import karty, gry
 
-
 class Card(karty.Card):
     # War game card
 
@@ -45,10 +44,10 @@ class Hand(karty.Hand):
             
 class Player(Hand):
     def lose(self):
-        print(self.name , "win.")
+        print(self.name , "lose.")
 
     def win(self):
-        print(self.name , "lose.")
+        print(self.name , "win.")
 
 
 class Game(object):
@@ -65,20 +64,21 @@ class Game(object):
     def play(self):
         self.deck.deal(self.players, per_hand = 1)
         
-        print(self.players.total)
+        scores = []
         for player in self.players:
-            print(player, player.total)
-            """
-            create a dictionary {player : total...
-            and sort it by score
-            than set the winner
+            print(player, player.name, player.total)
+            scores.append([player.total, player.name])    
 
+        scores.sort(reverse = True)
 
-if player.total:
+        print(scores[0][1], "won with score: ", scores[0][0])
 
-            
+        for player in self.players:
+            if player.name == scores[0][1]:
+                player.win()
             else:
-                print("We have a war!")"""
+                player.lose()
+        
 
 def main():
     print("Welcome in to the War game")
@@ -93,7 +93,7 @@ def main():
     again = None
     while again != "n":
         game.play()
-        again = gry.ask_yes_no("\Do you wanna play again? ")
+        again = gry.ask_yes_no("\Do you wanna play again? Type 't' for yes or 'n' for no.")
 
 main()
 input("Press any key to finish the game.")
