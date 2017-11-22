@@ -69,6 +69,12 @@ class BJ_Hand(karty.Hand):
     def is_busted(self):
         return self.total > 21
 
+    def my_money(self):
+        return self.money
+
+    def lose_money(self, value):
+        self.money -= value
+
 
 class BJ_Player(BJ_Hand):
     """ Gracz w blackjacku. """
@@ -90,7 +96,7 @@ class BJ_Player(BJ_Hand):
         self.lose()
 
     def lose(self):
-        print(self.name, "przegrywa i ", self.money, "na koncie.")
+        print(self.name, "przegrywa i ma ", self.money, "na koncie.")
 
     def win(self, cash):
         self.money += cash 
@@ -143,12 +149,18 @@ class BJ_Game(object):
                 player.bust()
 
     def money(self, player):
+        value = 0
         while not player.is_busted() and player.bet():
             value = int(input("Jak duzo chcesz obstawic? "))
-            while value not in range(0, int(self.money)):
+            maks = int(player.my_money())
+            print(maks)
+            while value not in range(0, maks):
                 value = int(input("Jak duzo chcesz obstawic? "))
-            self.money -= value
-            return value
+            player.lose_money(value)
+            maks = int(player.my_money())
+            print(maks)
+            return int(value)
+        return int(value)
              
     def play(self):
         # rozdaj każdemu początkowe dwie karty
@@ -162,7 +174,8 @@ class BJ_Game(object):
         cash = 0
         for player in self.players:
             self.__additional_cards(player)
-            cash += int(self.money(player))
+            cash += self.money(player)
+            cash *= 2
 
         self.dealer.flip_first_card()    # odsłoń pierwszą kartę rozdającego 
 
@@ -186,7 +199,7 @@ class BJ_Game(object):
                     elif player.total < self.dealer.total:
                         player.lose()
                     else:
-                        player.push(player.money)
+                        player.push()
 
         # usuń karty wszystkich graczy
         for player in self.players:
