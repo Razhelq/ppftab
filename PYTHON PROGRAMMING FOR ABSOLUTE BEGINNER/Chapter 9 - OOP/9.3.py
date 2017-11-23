@@ -1,5 +1,5 @@
 # Material from the book in polish
-# NOT finished
+# MONEY IMPLEMENTED
 # Blackjack
 # Od 1 do 7 graczy współzawodniczy z rozdającym
 
@@ -148,21 +148,28 @@ class BJ_Game(object):
             if player.is_busted():
                 player.bust()
 
+    #def player_money(self, player):
+        #playa_money = int(player.my_money()) + 1
+        #return playa_money
+        
     def money(self, player):
         value = 0
         while not player.is_busted() and player.bet():
             value = int(input("Jak duzo chcesz obstawic? "))
-            maks = int(player.my_money())
-            print(maks)
+            maks = int(player.my_money()) + 1
             while value not in range(0, maks):
                 value = int(input("Jak duzo chcesz obstawic? "))
             player.lose_money(value)
             maks = int(player.my_money())
-            print(maks)
             return int(value)
         return int(value)
              
     def play(self):
+
+        for player in self.players:
+            if player.my_money() <= 0:
+                self.players.remove(player)
+                
         # rozdaj każdemu początkowe dwie karty
         self.deck.deal(self.players + [self.dealer], per_hand = 2)
         self.dealer.flip_first_card()    # ukryj pierwszą kartę rozdającego
@@ -170,12 +177,12 @@ class BJ_Game(object):
             print(player)
         print(self.dealer)
 
-        # rozdaj graczom dodatkowe karty
+                # rozdaj graczom dodatkowe karty
         cash = 0
         for player in self.players:
             self.__additional_cards(player)
             cash += self.money(player)
-            cash *= 2
+            cash += int(cash * 1.5)
 
         self.dealer.flip_first_card()    # odsłoń pierwszą kartę rozdającego 
 
