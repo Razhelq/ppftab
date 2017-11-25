@@ -192,51 +192,43 @@ class crossroad(object):
         mountains = Mountains(player)
 
         finish = gry.ask_yes_no("Would you like to finish the game? (t for Yes / n for No)")
-        if finish == "t":
-            exit
-        else:
-            decision = ""            
+        decision = ""
+        while finish != "t":
             while decision not in ("desert", "forest", "mountains"):
                 decision = input("Where would you like to go? (desert / forest / mountains)")
+            choice = ""
+            while choice != "back":
                 choice = ""
-                while choice != "back":
-                    choice = ""
-                    if decision == "desert":
-                        choice = desert.choice()
-                        if choice == "oaza":
-                            desert.oaza()
-                            decision == ""
-                        elif choice == "piramid":
-                            desert.piramid()
-                            decision == ""
-                        elif choice == "tomb":
-                            desert.tomb()
-                            decision == ""
-                    elif decision == "forest":
-                        choice = forest.choice()
-                        if choice == "cabine":
-                            forest.cabine()
-                            decision == ""
-                        elif choice == "cave":
-                            forest.cave()
-                            decision == ""
-                        elif choice == "lake":
-                            forest.lake()
-                            decision == ""
-                    elif decision == "mountains":
-                        choice = mountains.choice()
-                        if choice == "cliff":
-                            mountains.cliff()
-                            decision == ""
-                        elif choice == "peak":
-                            mountains.peak()
-                            decision == ""
-                        elif choice == "lake":
-                            mountains.lake()
+                if decision == "desert":
+                    choice = desert.choice()
+                    if choice == "oaza":
+                        choice = desert.oaza()
+                    elif choice == "piramid":
+                        choice =desert.piramid()
+                    elif choice == "tomb":
+                        choice =desert.tomb()
+                    decision == ""
+                elif decision == "forest":
+                    choice = forest.choice()
+                    if choice == "cabine":
+                        choice =forest.cabine()
+                    elif choice == "cave":
+                        choice =forest.cave()
+                    elif choice == "lake":
+                        choice =forest.lake()
+                    decision == ""
+                elif decision == "mountains":
+                    choice = mountains.choice()
+                    if choice == "cliff":
+                        mountains.cliff()
+                    elif choice == "peak":
+                        mountains.peak()
+                    elif choice == "lake":
+                        mountains.lake()
+                    decision == ""
                 decision = ""
-                finish = gry.ask_yes_no("Would you like to finish the game? (t for Yes / n for No)")
-                if finish == "y":
-                    exit
+            finish = gry.ask_yes_no("Would you like to finish the game? (t for Yes / n for No)")
+                
                     
 
         
