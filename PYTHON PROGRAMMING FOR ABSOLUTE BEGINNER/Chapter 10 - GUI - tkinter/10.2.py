@@ -2,8 +2,10 @@
 # Player tries to guess the number and app informs him when the number is too small or too big.
 # GUI based app
 
+
 import random
 from tkinter import *
+
 
 class Whats_the_number(Frame):
     def __init__(self, master):
