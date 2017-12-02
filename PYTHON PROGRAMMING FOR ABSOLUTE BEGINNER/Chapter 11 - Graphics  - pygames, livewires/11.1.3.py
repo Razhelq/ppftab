@@ -1,5 +1,5 @@
 # Material from the book in polish
-# My modification will speed up the cook and the pizza
+# My modification will speed up the cook and the pizza put the pan higer and add second chef
 
 # Pizza Panic
 # Gracz musi złapać lecące w dół pizze, zanim spadną na ziemię
@@ -129,7 +129,9 @@ def main():
     games.screen.add(the_pan)
     
     the_chef = Chef()
+    the_chef_two = Chef()
     games.screen.add(the_chef)
+    games.screen.add(the_chef_two)
     
     games.mouse.is_visible = False
 
