@@ -83,7 +83,7 @@ class Pizza(games.Sprite):
 
 
 class Chef(games.Sprite):
-    """
+    """che
     Szef kuchni, który porusza się w lewo i w prawo, zrzucając pizze.
     """
     image = games.load_image("kucharz.bmp")
