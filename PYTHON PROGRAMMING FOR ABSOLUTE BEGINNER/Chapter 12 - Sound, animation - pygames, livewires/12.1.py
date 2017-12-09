@@ -53,15 +53,18 @@ class Asteroid(Wrapper):
     SMALL = 1
     MEDIUM = 2
     LARGE = 3
+    STRONG = 4
     images = {SMALL  : games.load_image("asteroida_mala.bmp"),
               MEDIUM : games.load_image("asteroida_sred.bmp"),
-              LARGE  : games.load_image("asteroida_duza.bmp") }
+              LARGE  : games.load_image("asteroida_duza.bmp"),
+              STRONG : games.load_image("asteroid_strong.png")}
 
     SPEED = 2
     SPAWN = 2
     POINTS = 30
     
     total =  0
+    strong = 1
       
     def __init__(self, game, x, y, size):
         """ Inicjalizuj duszka asteroidy. """
@@ -84,7 +87,7 @@ class Asteroid(Wrapper):
         self.game.score.right = games.screen.width - 10   
         
         # jeśli nie jest to mała asteroida, zastąp ją dwoma mniejszymi
-        if self.size != Asteroid.SMALL:
+        if self.size != Asteroid.SMALL and self.size != Asteroid.STRONG:
             for i in range(Asteroid.SPAWN):
                 new_asteroid = Asteroid(game = self.game,
                                         x = self.x,
@@ -92,19 +95,22 @@ class Asteroid(Wrapper):
                                         size = self.size - 1)
                 games.screen.add(new_asteroid)
 
+            
+        elif self.size == Asteroid.STRONG and Asteroid.strong > 0:               
+            strong_asteroid = Asteroid(game = self.game,
+                                       x = self.x,
+                                       y = self.y,
+                                       size = Asteroid.STRONG)
+            games.screen.add(strong_asteroid)
+            Asteroid.strong -= 1 
+              
+
         # jeśli wszystkie asteroidy zostały zniszczone, przejdź do następnego poziomu    
         if Asteroid.total == 0:
             self.game.advance()
 
         super(Asteroid, self).die()
-
-
-class Strong_asteroid(Wrapper):
-    SPEED = 2
-    SPAWN = 1
-    POINTS = 25
-
-    
+  
 
 
 class Ship(Collider):
@@ -272,6 +278,7 @@ class Game(object):
         
         # wielkość obszaru ochronnego wokół statku przy tworzeniu asteroid
         BUFFER = 150
+        Asteroid.strong = 1
      
         # utwórz nowe asteroidy 
         for i in range(self.level):
@@ -299,11 +306,13 @@ class Game(object):
                                     size = Asteroid.LARGE)
 
             # my new asteroid
-            strong_asteroid = Strong_asteroid(game = self,
+            strong_asteroid = Asteroid(game = self,
                                               x = x,
-                                              y = y)
+                                              y = y,
+                                       size = Asteroid.STRONG)
                                                         
             games.screen.add(new_asteroid)
+            games.screen.add(strong_asteroid)
 
         # wyświetl numer poziomu
         level_message = games.Message(value = "Poziom " + str(self.level),
