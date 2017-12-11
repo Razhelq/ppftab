@@ -5,7 +5,9 @@
 
 import math, random
 from livewires import games, color
+
 games.init(screen_width = 1400, screen_height = 480, fps = 50)
+
 
 class Button(games.Sprite):
 
@@ -19,7 +21,7 @@ class Button(games.Sprite):
     blue_light = 4
     blue_dark = 9
     yellow_light = 5
-    yellow_dark = 10
+    yellow_dark = 10    
 
     images = {red_light    : games.load_image("red_light.jpg", transparent = False),
               red_dark     : games.load_image("red_dark.jpg", transparent = False),
@@ -39,16 +41,25 @@ class Button(games.Sprite):
 
         self.game = game
         self.color = color
+        self.button_wait = 100
 
     def change(self):
-        new_butt = New_Button(game = self.game,
-                              x = self.x,
-                              y = self.y,
-                              color = self.color)
-        
-        games.screen.add(new_butt)
+        if self.button_wait == 0:
+            new_butt = New_Button(game = self.game,
+                                  x = self.x,
+                                  y = self.y,
+                                  color = self.color)
+            
+            games.screen.add(new_butt)
+            self.button_wait += 100
 
-class New_Button(Button):
+    def update(self):
+        self.button_wait -= 1
+
+    
+        
+
+class New_Button(games.Sprite):
 
     red_dark = 1
     black_dark = 2
@@ -58,28 +69,30 @@ class New_Button(Button):
 
     images = {red_dark     : games.load_image("red_dark.jpg", transparent = False),
               black_dark   : games.load_image("black_dark.jpg", transparent = False),
-              green_dark   : games.load_image("green_dark.png", transparent = False),
-              blue_dark    : games.load_image("blue_dark.png", transparent = False),
+              green_dark   : games.load_image("green_dark.jpg", transparent = False),
+              blue_dark    : games.load_image("blue_dark.jpg", transparent = False),
               yellow_dark  : games.load_image("yellow_dark.jpg", transparent = False)}
   
     
     
-    LIFETIME = 10
+    LIFETIME = 40
     def __init__(self, game, x, y, color):
         super(New_Button, self).__init__(image = New_Button.images[color],
                                          x = x,
                                          y = y)
         self.game = game        
         self.lifetime = New_Button.LIFETIME
+        self.color = color
 
     def update(self):
+        super(New_Button,self).update()
                  
         self.lifetime -= 1
         if self.lifetime == 0:
             self.destroy()
         
 class Game(object):
-    color = 1
+    color = 1    
     
     def __init__(self):
         self.level = 0
@@ -119,16 +132,14 @@ class Game(object):
             buttons.append(new_button)
             self.location += 250
             Game.color += 1
-        
+
         level = 3
         for i in range(level):            
             random_button = buttons[random.randrange(5)]
             new_buttons.append(new_button)
             random_button.change()
             
-                    
-            
-            
+          
         
 
 def main():
