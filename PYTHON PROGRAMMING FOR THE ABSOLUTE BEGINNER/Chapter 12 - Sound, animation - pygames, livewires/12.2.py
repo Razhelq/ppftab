@@ -10,7 +10,6 @@ games.init(screen_width = 1400, screen_height = 480, fps = 50)
 
 
 class Button(games.Sprite):
-
     
     red_light = 1
     red_dark = 6
@@ -41,22 +40,33 @@ class Button(games.Sprite):
 
         self.game = game
         self.color = color
-        self.button_wait = 100
+        self.delay = 100
+        self.level = 3
 
     def change(self):
-        if self.button_wait == 0:
-            new_butt = New_Button(game = self.game,
-                                  x = self.x,
-                                  y = self.y,
-                                  color = self.color)
-            
-            games.screen.add(new_butt)
-            self.button_wait += 100
+        new_butt = New_Button(game = self.game,
+                              x = self.x,
+                              y = self.y,
+                              color = self.color)
+        
+        games.screen.add(new_butt)
+
 
     def update(self):
-        self.button_wait -= 1
 
-    
+        self.check_on()
+
+    def check_on(self):
+        new_buttons = []
+         
+        if self.delay > 0:
+            self.delay -= 1
+        else:
+            random_button = Game.Buttons[random.randrange(5)]
+            new_buttons.append(random_button)
+            random_button.change()
+            self.delay += 100
+            self.level -= 1            
         
 
 class New_Button(games.Sprite):
@@ -76,6 +86,7 @@ class New_Button(games.Sprite):
     
     
     LIFETIME = 40
+    
     def __init__(self, game, x, y, color):
         super(New_Button, self).__init__(image = New_Button.images[color],
                                          x = x,
@@ -92,7 +103,9 @@ class New_Button(games.Sprite):
             self.destroy()
         
 class Game(object):
-    color = 1    
+    
+    color = 1
+    Buttons = []
     
     def __init__(self):
         self.level = 0
@@ -118,30 +131,18 @@ class Game(object):
 
     def advance(self):
 
-        self.level += 1
         self.location = 100
-        buttons = []
-        new_buttons = []
-
         for i in range(5):
             new_button = Button(game = self,
                                 x = self.location + 100,
                                 y = 240,
                                 color = Game.color)
             games.screen.add(new_button)
-            buttons.append(new_button)
+            self.Buttons.append(new_button)
             self.location += 250
-            Game.color += 1
-
-        level = 3
-        for i in range(level):            
-            random_button = buttons[random.randrange(5)]
-            new_buttons.append(new_button)
-            random_button.change()
-            
-          
+            Game.color += 1         
+              
         
-
 def main():
     simon = Game()
     simon.play()
