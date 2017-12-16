@@ -1,7 +1,8 @@
 # Simos says type of game
 # Player needs to repeat different combinations of colors and sounds
 
-#  Just began. Not finished
+# Just began. Not finished
+# I need to change new butt value to Boolean
 
 import math, random
 from livewires import games, color
@@ -20,7 +21,9 @@ class Button(games.Sprite):
     blue_light = 4
     blue_dark = 9
     yellow_light = 5
-    yellow_dark = 10    
+    yellow_dark = 10
+    new_butts = []
+    choice = 0
 
     images = {red_light    : games.load_image("red_light.jpg", transparent = False),
               red_dark     : games.load_image("red_dark.jpg", transparent = False),
@@ -40,7 +43,6 @@ class Button(games.Sprite):
 
         self.game = game
         self.color = color
-        self.new_butts = []
 
     def update(self):
         super(Button, self).update()
@@ -50,29 +52,29 @@ class Button(games.Sprite):
             sound = games.load_sound("eksplozja.wav")
             sound.play()
             games.screen.add(one)
-            self.new_butts.append(one)
+            Button.new_butts.append(1)
         elif games.keyboard.is_pressed(games.K_v):
             two = New_Button(game = self, x = 450, y = 240, color = 2)
             sound = games.load_sound("pocisk.wav")
             sound.play()
             games.screen.add(two)
-            self.new_butts.append(two)
+            Button.new_butts.append(2)
         elif games.keyboard.is_pressed(games.K_b):
             three = New_Button(game = self, x = 700, y = 240, color = 3)
             sound = games.load_sound("przyspieszenie.wav")
             sound.play()
             games.screen.add(three)
-            self.new_butts.append(three)
+            Button.new_butts.append(3)
         elif games.keyboard.is_pressed(games.K_n):
             four = New_Button(game = self, x = 950, y = 240, color = 4)
             sound = games.load_sound("poziom.wav")
             sound.play()
             games.screen.add(four)
-            self.new_butts.append(four)
+            Button.new_butts.append(4)
         elif games.keyboard.is_pressed(games.K_m):
             five = New_Button(game = self, x = 1200, y = 240, color = 5)
             games.screen.add(five)
-            self.new_butts.append(five)
+            Button.new_butts.append(5)
     
 
 class Master(games.Sprite):
@@ -85,7 +87,6 @@ class Master(games.Sprite):
         self.number = 0
         self.game = game
         self.level = level
-        self.new_butts = []
         
     def update(self):
         
@@ -98,29 +99,30 @@ class Master(games.Sprite):
                 sound = games.load_sound("eksplozja.wav")
                 sound.play()
                 games.screen.add(one)
-                self.new_butts.append(one)
+                Master.new_butts.append(1)
             elif self.number == 1:
                 two = New_Button(game = self, x = 450, y = 240, color = 2)
                 sound = games.load_sound("pocisk.wav")
                 sound.play()
                 games.screen.add(two)
-                self.new_butts.append(two)
+                Master.new_butts.append(2)
             elif self.number == 2:
                 three = New_Button(game = self, x = 700, y = 240, color = 3)
                 sound = games.load_sound("przyspieszenie.wav")
                 sound.play()
                 games.screen.add(three)
-                self.new_butts.append(three)
+                Master.new_butts.append(3)
             elif self.number == 3:
                 four = New_Button(game = self, x = 950, y = 240, color = 4)
                 sound = games.load_sound("poziom.wav")
                 sound.play()
                 games.screen.add(four)
-                self.new_butts.append(four)
+                Master.new_butts.append(4)
             elif self.number == 4:
                 five = New_Button(game = self, x = 1200, y = 240, color = 5)
                 games.screen.add(five)
-                self.new_butts.append(five)
+                Master.new_butts.append(5)
+            Button.choice += 1
                 
             self.delay += 50
             self.level -= 1
@@ -206,11 +208,11 @@ class Game(object):
         master = Master(game = self, x = 10, y = 10, level = Game.level)
         games.screen.add(master)
 
-        if Master.new_butts == Button.new_butts:
-            GAME.level += 1
-        else:
-            play()
-
+        if Master.new_butts == Button.new_butts and Button.choice > 0:
+            self.score.value += 10
+            Game.level += 1
+            self.play()
+                    
         if self.next_level > 1:
             self.sound.play()
             
