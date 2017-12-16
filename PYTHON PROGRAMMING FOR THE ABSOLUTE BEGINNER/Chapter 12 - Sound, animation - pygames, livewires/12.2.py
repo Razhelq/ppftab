@@ -40,35 +40,92 @@ class Button(games.Sprite):
 
         self.game = game
         self.color = color
-        self.delay = 100
-        self.level = 3
-
-    def change(self):
-        new_butt = New_Button(game = self.game,
-                              x = self.x,
-                              y = self.y,
-                              color = self.color)
-        
-        games.screen.add(new_butt)
-
+        self.new_butts = []
 
     def update(self):
+        super(Button, self).update()
 
-        self.check_on()
+        if games.keyboard.is_pressed(games.K_c):
+            one = New_Button(game = self, x = 200, y = 240, color = 1)
+            sound = games.load_sound("eksplozja.wav")
+            sound.play()
+            games.screen.add(one)
+            self.new_butts.append(one)
+        elif games.keyboard.is_pressed(games.K_v):
+            two = New_Button(game = self, x = 450, y = 240, color = 2)
+            sound = games.load_sound("pocisk.wav")
+            sound.play()
+            games.screen.add(two)
+            self.new_butts.append(two)
+        elif games.keyboard.is_pressed(games.K_b):
+            three = New_Button(game = self, x = 700, y = 240, color = 3)
+            sound = games.load_sound("przyspieszenie.wav")
+            sound.play()
+            games.screen.add(three)
+            self.new_butts.append(three)
+        elif games.keyboard.is_pressed(games.K_n):
+            four = New_Button(game = self, x = 950, y = 240, color = 4)
+            sound = games.load_sound("poziom.wav")
+            sound.play()
+            games.screen.add(four)
+            self.new_butts.append(four)
+        elif games.keyboard.is_pressed(games.K_m):
+            five = New_Button(game = self, x = 1200, y = 240, color = 5)
+            games.screen.add(five)
+            self.new_butts.append(five)
+    
 
-    def check_on(self):
-        new_buttons = []
-         
+class Master(games.Sprite):
+
+    def __init__(self, game, x, y, level):
+        super(Master, self).__init__(image = games.load_image("asteroid_strong.png"),
+                                     x = x,
+                                     y = y)
+        self.delay = 50
+        self.number = 0
+        self.game = game
+        self.level = level
+        self.new_butts = []
+        
+    def update(self):
+        
         if self.delay > 0:
             self.delay -= 1
-        else:
-            random_button = Game.Buttons[random.randrange(5)]
-            new_buttons.append(random_button)
-            random_button.change()
-            self.delay += 100
-            self.level -= 1            
-        
-
+        elif self.delay <= 0 and self.level > 0:
+            self.number = random.randrange(5)
+            if self.number == 0:
+                one = New_Button(game = self, x = 200, y = 240, color = 1)
+                sound = games.load_sound("eksplozja.wav")
+                sound.play()
+                games.screen.add(one)
+                self.new_butts.append(one)
+            elif self.number == 1:
+                two = New_Button(game = self, x = 450, y = 240, color = 2)
+                sound = games.load_sound("pocisk.wav")
+                sound.play()
+                games.screen.add(two)
+                self.new_butts.append(two)
+            elif self.number == 2:
+                three = New_Button(game = self, x = 700, y = 240, color = 3)
+                sound = games.load_sound("przyspieszenie.wav")
+                sound.play()
+                games.screen.add(three)
+                self.new_butts.append(three)
+            elif self.number == 3:
+                four = New_Button(game = self, x = 950, y = 240, color = 4)
+                sound = games.load_sound("poziom.wav")
+                sound.play()
+                games.screen.add(four)
+                self.new_butts.append(four)
+            elif self.number == 4:
+                five = New_Button(game = self, x = 1200, y = 240, color = 5)
+                games.screen.add(five)
+                self.new_butts.append(five)
+                
+            self.delay += 50
+            self.level -= 1
+            
+    
 class New_Button(games.Sprite):
 
     red_dark = 1
@@ -82,7 +139,8 @@ class New_Button(games.Sprite):
               green_dark   : games.load_image("green_dark.jpg", transparent = False),
               blue_dark    : games.load_image("blue_dark.jpg", transparent = False),
               yellow_dark  : games.load_image("yellow_dark.jpg", transparent = False)}
-  
+
+    
     
     
     LIFETIME = 40
@@ -106,10 +164,11 @@ class Game(object):
     
     color = 1
     Buttons = []
+    level = 3
     
     def __init__(self):
-        self.level = 0
-
+        self.next_level = 0
+        
         self.sound = games.load_sound("poziom.wav")
 
         self.score = games.Text(value = 0,
@@ -131,6 +190,8 @@ class Game(object):
 
     def advance(self):
 
+        self.next_level += 1
+
         self.location = 100
         for i in range(5):
             new_button = Button(game = self,
@@ -140,7 +201,20 @@ class Game(object):
             games.screen.add(new_button)
             self.Buttons.append(new_button)
             self.location += 250
-            Game.color += 1         
+            Game.color += 1
+
+        master = Master(game = self, x = 10, y = 10, level = Game.level)
+        games.screen.add(master)
+
+        if Master.new_butts == Button.new_butts:
+            GAME.level += 1
+        else:
+            play()
+
+        if self.next_level > 1:
+            self.sound.play()
+            
+        
               
         
 def main():
