@@ -138,10 +138,22 @@ class Master(games.Sprite):
 
         if Master.new_butts == Button.new_butts and Button.choice > 0:
             
+            level_message = games.Message(value = "Level " + str(int(Game.level) - 1),
+                                              size = 40,
+                                              color = color.yellow,
+                                              x = games.screen.width/2,
+                                              y = games.screen.height/2,
+                                              lifetime = 3 * games.screen.fps,
+                                              is_collideable = False)
+            games.screen.add(level_message)
+            
             if self.delay_two <= 0:
                 self.game.score.value += 10
-                self.game.level += 1
+                
+                Game.level += 1              
+                    
                 self.delay_two += 200
+                Game.color = 1
                 self.game.play()
                 
             elif self.delay_two > 0:
@@ -161,10 +173,7 @@ class New_Button(games.Sprite):
               green_dark   : games.load_image("green_dark.jpg", transparent = False),
               blue_dark    : games.load_image("blue_dark.jpg", transparent = False),
               yellow_dark  : games.load_image("yellow_dark.jpg", transparent = False)}
-
-    
-    
-    
+          
     LIFETIME = 40
     
     def __init__(self, game, x, y, color):
