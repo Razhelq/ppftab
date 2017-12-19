@@ -2,7 +2,7 @@
 # Player needs to repeat different combinations of colors and sounds
 
 # Just began. Not finished
-# I need to change new butt value to Boolean
+# Boolean paraworking version
 
 import math, random
 from livewires import games, color
@@ -130,7 +130,7 @@ class Master(games.Sprite):
                 games.screen.add(five)
                 Master.new_butts[4] = True
                                         
-            self.delay += 50
+            self.delay = 50
             self.level -= 1
         self.check_status()
         
@@ -139,10 +139,10 @@ class Master(games.Sprite):
         if Master.new_butts == Button.new_butts and Button.choice > 0:
             
             level_message = games.Message(value = "Level " + str(int(Game.level) - 1),
-                                              size = 40,
+                                              size = 60,
                                               color = color.yellow,
                                               x = games.screen.width/2,
-                                              y = games.screen.height/2,
+                                              y = 50,
                                               lifetime = 5 * games.screen.fps,
                                               is_collideable = False)
             games.screen.add(level_message)
@@ -153,6 +153,7 @@ class Master(games.Sprite):
                 Game.level += 1              
                     
                 self.delay_two = 200
+                self.delay = 100
                 Game.color = 1
                 Master.new_butts = [False, False, False, False, False]
                 Button.new_butts = [False, False, False, False, False]
@@ -210,6 +211,16 @@ class Game(object):
                                right = games.screen.width - 10)
 
         games.screen.add(self.score)
+
+        level_message = games.Message(value = "Level 1",
+                                              size = 60,
+                                              color = color.yellow,
+                                              x = games.screen.width/2,
+                                              y = 50,
+                                              lifetime = 5 * games.screen.fps,
+                                              is_collideable = False)
+        games.screen.add(level_message)
+
 
     def play(self):
 
