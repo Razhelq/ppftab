@@ -2,7 +2,7 @@
 # Player needs to repeat different combinations of colors and sounds
 
 # Just began. Not finished
-# Trying to fix the boolean method from 12.2.1
+# Trying to fix the boolean method from 12.2.1, still in progress.
 
 import math, random
 from livewires import games, color
@@ -13,28 +13,18 @@ games.init(screen_width = 1400, screen_height = 480, fps = 50)
 class Button(games.Sprite):
     
     red_light = 1
-    red_dark = 6
     black_light = 2
-    black_dark = 7
     green_light = 3
-    green_dark = 8
     blue_light = 4
-    blue_dark = 9
     yellow_light = 5
-    yellow_dark = 10
     new_butts = []
     choice = 0
 
     images = {red_light    : games.load_image("red_light.jpg", transparent = False),
-              red_dark     : games.load_image("red_dark.jpg", transparent = False),
               black_light  : games.load_image("black_light.jpg", transparent = False),
-              black_dark   : games.load_image("black_dark.jpg", transparent = False),
               green_light  : games.load_image("green_light.jpg", transparent = False),
-              green_dark   : games.load_image("green_dark.png", transparent = False),
               blue_light   : games.load_image("blue_light.png", transparent = False),
-              blue_dark    : games.load_image("blue_dark.png", transparent = False),
-              yellow_light : games.load_image("yellow_light.png", transparent = False),
-              yellow_dark  : games.load_image("yellow_dark.jpg", transparent = False)}
+              yellow_light : games.load_image("yellow_light.png", transparent = False)}
 
   
     def __init__(self, game, x, y, color):
@@ -49,6 +39,7 @@ class Button(games.Sprite):
         self.b = 0
         self.n = 0
         self.m = 0
+        self.delay = 0
         
 
     def update(self):
@@ -56,72 +47,101 @@ class Button(games.Sprite):
 
         if games.keyboard.is_pressed(games.K_c):
             one = New_Button(game = self, x = 200, y = 240, color = 1)
-            sound = games.load_sound("eksplozja.wav")
+            sound = games.load_sound("poziom.wav")
             sound.play()
             games.screen.add(one)
+            self.delay = 0
             butt = "c"
-            if self.c == 0:
+            if self.c == 0 and self.delay <= 0:
+                self.delay = 1
                 Button.new_butts.append(butt)
                 self.c = 1
                 self.v = 0
                 self.b = 0
                 self.n = 0
                 self.m = 0
+            elif self.c == 0 and self.delay > 0:
+                self.delay -= 1
             Button.choice += 1
         elif games.keyboard.is_pressed(games.K_v):
             two = New_Button(game = self, x = 450, y = 240, color = 2)
-            sound = games.load_sound("pocisk.wav")
+            sound = games.load_sound("poziom.wav")
             sound.play()
             games.screen.add(two)
+            self.delay = 0
             butt = "v"
-            if self.v == 0:
+            if self.v == 0 and self.delay <= 0:
+                self.delay = 2
                 Button.new_butts.append(butt)
                 self.v = 1
                 self.c = 0
                 self.b = 0
                 self.n = 0
                 self.m = 0
-            Button.choice += 1
+            elif self.v == 0 and self.delay > 0:
+                self.delay -= 1
+            Button.choice = 1
         elif games.keyboard.is_pressed(games.K_b):
             three = New_Button(game = self, x = 700, y = 240, color = 3)
-            sound = games.load_sound("przyspieszenie.wav")
+            sound = games.load_sound("poziom.wav")
             sound.play()
             games.screen.add(three)
+            self.delay = 0
             butt = "b"
-            if self.b == 0:
+            if self.b == 0 and self.delay <= 0:
+                self.delay = 2
                 Button.new_butts.append(butt)
                 self.b = 1
                 self.c = 0
                 self.v = 0
                 self.n = 0
                 self.m = 0
-            Button.choice += 1
+            elif self.b == 0 and self.delay > 0:
+                self.delay -= 1
+            Button.choice = 1
         elif games.keyboard.is_pressed(games.K_n):
             four = New_Button(game = self, x = 950, y = 240, color = 4)
             sound = games.load_sound("poziom.wav")
             sound.play()
             games.screen.add(four)
+            self.delay = 0
             butt = "n"
-            if self.n == 0:
+            if self.n == 0 and self.delay <= 0:
+                self.delay = 2
                 Button.new_butts.append(butt)
-                self.n = 0
+                self.n = 1
                 self.v = 0
                 self.b = 0
                 self.c = 0
                 self.m = 0
-            Button.choice += 1
+            elif self.n == 0 and self.delay > 0:
+                self.delay -= 1
+            Button.choice = 1
         elif games.keyboard.is_pressed(games.K_m):
-            five = New_Button(game = self, x = 1200, y = 240, color = 5)
+            five = New_Button(game = self, x = 1200, y = 240, color = 5)            
+            sound = games.load_sound("poziom.wav")
             games.screen.add(five)
+            self.delay = 0
             butt = "m"
-            if self.m == 0:
+            if self.m == 0 and self.delay <= 0:
+                self.delay = 2
                 Button.new_butts.append(butt)
-                self.m = 0
+                self.m = 1
                 self.v = 0
                 self.b = 0
                 self.n = 0
                 self.c = 0
-            Button.choice += 1
+            elif self.m == 0 and self.delay > 0:
+                self.delay -= 1
+            Button.choice = 1
+        level_messageoo = games.Message(value = Button.new_butts,
+                                       size = 30,
+                                       color = color.yellow,
+                                       x = games.screen.width/2,
+                                       y = 450,
+                                       lifetime = games.screen.fps,
+                                       is_collideable = False)
+        games.screen.add(level_messageoo)
     
 
 class Master(games.Sprite):
@@ -149,36 +169,49 @@ class Master(games.Sprite):
                 sound.play()
                 games.screen.add(one)
                 butt = "c"
-                Master.new_butts.append(butt)
+                for i in range(5):
+                    Master.new_butts.append(butt)
             elif self.number == 1:
                 two = New_Button(game = self, x = 450, y = 240, color = 2)
                 sound = games.load_sound("pocisk.wav")
                 sound.play()
                 games.screen.add(two)
                 butt = "v"
-                Master.new_butts.append(butt)
+                for i in range(5):
+                    Master.new_butts.append(butt)
             elif self.number == 2:
                 three = New_Button(game = self, x = 700, y = 240, color = 3)
                 sound = games.load_sound("przyspieszenie.wav")
                 sound.play()
                 games.screen.add(three)
                 butt = "b"
-                Master.new_butts.append(butt)
+                for i in range(5):
+                    Master.new_butts.append(butt)
             elif self.number == 3:
                 four = New_Button(game = self, x = 950, y = 240, color = 4)
                 sound = games.load_sound("poziom.wav")
                 sound.play()
                 games.screen.add(four)
                 butt = "n"
-                Master.new_butts.append(butt)
+                for i in range(5):
+                    Master.new_butts.append(butt)
             elif self.number == 4:
                 five = New_Button(game = self, x = 1200, y = 240, color = 5)
                 games.screen.add(five)
                 butt = "m"
-                Master.new_butts.append(butt)
+                for i in range(5):
+                    Master.new_butts.append(butt)
                                         
             self.delay = 50
             self.level -= 1
+        level_messageo = games.Message(value = Master.new_butts,
+                                      size = 30,
+                                      color = color.yellow,
+                                      x = games.screen.width/2,
+                                      y = 350,
+                                      lifetime = games.screen.fps,
+                                      is_collideable = False)
+        games.screen.add(level_messageo)
         self.check_status()
         
     def check_status(self):
@@ -202,8 +235,8 @@ class Master(games.Sprite):
                 self.delay_two = 200
                 self.delay = 50
                 Game.color = 1
-                Master.new_butts = [False, False, False, False, False]
-                Button.new_butts = [False, False, False, False, False]
+                Master.new_butts = []
+                Button.new_butts = []
                 Button.choice = 0
                 self.game.play()
                 
@@ -282,9 +315,9 @@ class Game(object):
 
         Button.choice = 0
 
-        Master.new_butts = [False, False, False, False, False]
+        Master.new_butts = []
         
-        Button.new_butts = [False, False, False, False, False]
+        Button.new_butts = []
 
         self.location = 100
         for i in range(5):
